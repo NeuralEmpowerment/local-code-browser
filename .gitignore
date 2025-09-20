@@ -1,0 +1,19 @@
+# Rust
+target/
+**/*.rs.bk
+
+# Node/Tauri (future)
+node_modules/
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+
+# Local env
+.env
+

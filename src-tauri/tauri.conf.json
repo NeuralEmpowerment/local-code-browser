@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Project Browser",
+  "version": "0.1.0",
+  "identifier": "com.projectbrowser.app",
+  "build": {
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Project Browser",
+        "width": 1200,
+        "height": 800
+      }
+    ]
+  }
+}
+
