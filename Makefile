@@ -5,7 +5,7 @@ PACKAGE ?= project-browser
 QA_EXCLUDES ?= --exclude app
 
 ## Composite targets
-.PHONY: all setup build check fmt fmt-fix lint test qa clean help
+.PHONY: all setup build run check fmt fmt-fix lint test qa clean help
 
 all: build
 
@@ -16,6 +16,7 @@ help: ## Show this help message
 	@echo "  all          - Build the project (default target)"
 	@echo "  setup        - Install Rust components (clippy, rustfmt)"
 	@echo "  build        - Build the workspace"
+	@echo "  run          - Run the application (with analysis features)"
 	@echo "  clean        - Clean build artifacts"
 	@echo ""
 	@echo "Code Quality:"
@@ -51,7 +52,14 @@ setup:
 	rustup component add clippy rustfmt || true
 
 build:
+	@echo "Building web frontend..."
+	$(MAKE) web-build
+	@echo "Building Rust workspace..."
 	$(CARGO) build --workspace
+
+run:
+	@echo "Running application with analysis features..."
+	$(MAKE) tauri-run-analyzed
 
 check:
 	$(CARGO) check --workspace --all-targets $(QA_EXCLUDES)

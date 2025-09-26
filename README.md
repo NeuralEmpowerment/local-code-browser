@@ -2,6 +2,43 @@
 
 A powerful desktop application for browsing, analyzing, and managing your local code projects. Built with Tauri (Rust + React) for fast performance and native desktop integration.
 
+## Table of Contents
+
+- [Local Code Browser](#local-code-browser)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+    - [🔍 **Project Discovery \& Analysis**](#-project-discovery--analysis)
+    - [📊 **Interactive Project Browser**](#-interactive-project-browser)
+    - [🚀 **Editor Integration**](#-editor-integration)
+    - [💫 **Modern UI/UX**](#-modern-uiux)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+  - [🚀 Quickstart](#-quickstart)
+    - [Build from Source](#build-from-source)
+  - [Usage](#usage)
+    - [🖥️ **Desktop Application**](#️-desktop-application)
+    - [🖱️ **CLI Interface**](#️-cli-interface)
+    - [⚙️ **Configuration**](#️-configuration)
+      - [**Config File Location**](#config-file-location)
+      - [**Configuration Options**](#configuration-options)
+      - [**Ignore Precedence**](#ignore-precedence)
+      - [**Configuration Commands**](#configuration-commands)
+      - [**Project Detection**](#project-detection)
+  - [Development](#development)
+    - [🛠️ **Available Commands**](#️-available-commands)
+    - [📁 **Project Structure**](#-project-structure)
+    - [🔧 **Architecture**](#-architecture)
+      - [**Workspace Structure**](#workspace-structure)
+      - [**Feature Flags**](#feature-flags)
+      - [**Technology Stack**](#technology-stack)
+      - [**Key Dependencies**](#key-dependencies)
+  - [Troubleshooting](#troubleshooting)
+    - [Editor Integration Issues](#editor-integration-issues)
+    - [Performance Tips](#performance-tips)
+  - [Contributing](#contributing)
+  - [License](#license)
+
+
 ## Features
 
 ### 🔍 **Project Discovery & Analysis**
@@ -38,11 +75,32 @@ A powerful desktop application for browsing, analyzing, and managing your local 
 - **Node.js** (v16+)
 - **npm** or **yarn**
 
+## 🚀 Quickstart
+
+Get up and running in just three commands:
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd local-code-browser
+
+# 1. Setup development environment
+make setup
+
+# 2. Build the application
+make build
+
+# 3. Run the application
+make run
+```
+
+That's it! The application will launch with all analysis features enabled.
+
 ### Build from Source
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd local-code-visualizer
+cd local-code-browser
 
 # Install dependencies and build
 make setup
@@ -217,7 +275,7 @@ make clean          # Clean build artifacts
 ### 📁 **Project Structure**
 
 ```
-local-code-visualizer/
+local-code-browser/
 ├── src-tauri/              # Tauri backend (Rust)
 │   ├── src/main.rs         # Main application logic
 │   ├── Cargo.toml          # Rust dependencies
@@ -240,7 +298,7 @@ local-code-visualizer/
 The project uses a **Cargo workspace** structure for better code organization:
 
 ```
-local-code-visualizer/
+local-code-browser/
 ├── Cargo.toml              # Workspace definition
 ├── crates/                 # Rust crates
 │   ├── indexer/           # Core indexing logic
