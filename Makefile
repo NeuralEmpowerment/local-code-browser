@@ -40,6 +40,15 @@ help: ## Show this help message
 	@echo "  tauri-run          - Run Tauri desktop app"
 	@echo "  tauri-run-analyzed - Run Tauri app with analysis features"
 	@echo ""
+	@echo "Version Management:"
+	@echo "  version-show       - Show current versions from all files"
+	@echo "  version-check      - Check if versions are synchronized"
+	@echo "  version-bump-patch - Bump patch version (x.y.Z)"
+	@echo "  version-bump-minor - Bump minor version (x.Y.z)"
+	@echo "  version-bump-major - Bump major version (X.y.z)"
+	@echo "  version-bump-patch-commit - Bump patch and commit changes"
+	@echo "  version-bump-patch-tag    - Bump patch, commit, and create tag"
+	@echo ""
 	@echo "Web Frontend:"
 	@echo "  web-build    - Build web frontend"
 	@echo "  web-dev      - Start web development server"
@@ -121,3 +130,27 @@ web-dev:
 	npm --prefix web run dev
 web-preview:
 	npm --prefix web run preview
+
+# Version management targets
+.PHONY: version-show version-check version-bump-patch version-bump-minor version-bump-major version-bump-patch-commit version-bump-patch-tag
+
+version-show:
+	$(CARGO) run -p version-manager -- show
+
+version-check:
+	$(CARGO) run -p version-manager -- check
+
+version-bump-patch:
+	$(CARGO) run -p version-manager -- bump patch
+
+version-bump-minor:
+	$(CARGO) run -p version-manager -- bump minor
+
+version-bump-major:
+	$(CARGO) run -p version-manager -- bump major
+
+version-bump-patch-commit:
+	$(CARGO) run -p version-manager -- bump patch --commit
+
+version-bump-patch-tag:
+	$(CARGO) run -p version-manager -- bump patch --commit --tag

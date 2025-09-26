@@ -2,6 +2,7 @@
 members = [
   "crates/indexer",
   "crates/cli",
+  "crates/version-manager",
   "src-tauri",
 ]
 resolver = "2"
