@@ -387,7 +387,7 @@ If **Windsurf** or **Cursor** don't open:
 
 ## License
 
-[Add your license here]
+[MIT](./LICENSE)
 
 ---
 
