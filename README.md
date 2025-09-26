@@ -2,6 +2,9 @@
 
 A powerful desktop application for browsing, analyzing, and managing your local code projects. Built with Tauri (Rust + React) for fast performance and native desktop integration.
 
+![Local Code Browser Screenshot](public/local-code-browser.png)
+
+
 ## Table of Contents
 
 - [Local Code Browser](#local-code-browser)
