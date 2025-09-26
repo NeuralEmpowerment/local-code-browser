@@ -17,7 +17,6 @@ A powerful desktop application for browsing, analyzing, and managing your local 
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
   - [🚀 Quickstart](#-quickstart)
-    - [Build from Source](#build-from-source)
   - [Usage](#usage)
     - [🖥️ **Desktop Application**](#️-desktop-application)
     - [🖱️ **CLI Interface**](#️-cli-interface)
@@ -84,7 +83,7 @@ Get up and running in just three commands:
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/NeuralEmpowerment/local-code-browser.git
 cd local-code-browser
 
 # 1. Setup development environment
@@ -98,23 +97,6 @@ make run
 ```
 
 That's it! The application will launch with all analysis features enabled.
-
-### Build from Source
-```bash
-# Clone the repository
-git clone <repository-url>
-cd local-code-browser
-
-# Install dependencies and build
-make setup
-make build
-
-# Run the desktop app
-make tauri-run
-
-# Or run with analysis features (recommended)
-make tauri-run-analyzed
-```
 
 ## Usage
 
