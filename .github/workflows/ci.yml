@@ -64,7 +64,9 @@ jobs:
         continue-on-error: true
 
       - name: Clean previous build
-        run: rm -rf ../dist
+        run: |
+          rm -rf ../dist || true
+        shell: bash
         working-directory: web
 
       - name: Build frontend for Tauri compilation
@@ -143,7 +145,9 @@ jobs:
         working-directory: web
 
       - name: Clean previous build
-        run: rm -rf ../dist
+        run: |
+          rm -rf ../dist || true
+        shell: bash
         working-directory: web
 
       - name: Build frontend
