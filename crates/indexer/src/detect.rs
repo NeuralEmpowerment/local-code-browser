@@ -9,6 +9,8 @@ pub enum ProjectType {
     Go,
     Java,
     DotNet,
+    Terraform,
+    Ansible,
     Other,
 }
 
@@ -21,6 +23,8 @@ impl ProjectType {
             ProjectType::Go => "go",
             ProjectType::Java => "java",
             ProjectType::DotNet => ".net",
+            ProjectType::Terraform => "terraform",
+            ProjectType::Ansible => "ansible",
             ProjectType::Other => "other",
         }
     }
@@ -35,6 +39,8 @@ pub fn detect_project_type(dir: &Path) -> Option<ProjectType> {
         (ProjectType::Go, &["go.mod"][..]),
         (ProjectType::Java, &["pom.xml", "build.gradle", "gradlew"]),
         (ProjectType::DotNet, &["global.json"][..]),
+        (ProjectType::Terraform, &["main.tf", "variables.tf", "outputs.tf"][..]),
+        (ProjectType::Ansible, &[]), // Special case - handled below
     ];
 
     for (ptype, files) in candidates.iter() {
@@ -54,6 +60,21 @@ pub fn detect_project_type(dir: &Path) -> Option<ProjectType> {
             }
         }
     }
+
+    // Special detection for Ansible
+    let ansible_dir = dir.join("ansible");
+    if ansible_dir.is_dir() {
+        if let Ok(entries) = fs::read_dir(&ansible_dir) {
+            for entry in entries.flatten() {
+                if let Some(ext) = entry.path().extension() {
+                    if ext == "yml" || ext == "yaml" {
+                        return Some(ProjectType::Ansible);
+                    }
+                }
+            }
+        }
+    }
+
     None
 }
 
