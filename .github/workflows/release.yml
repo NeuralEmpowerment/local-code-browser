@@ -65,7 +65,11 @@ jobs:
         working-directory: web
 
       - name: Build frontend
-        run: npm run build
+        run: |
+          echo "Building frontend..."
+          npm run build
+          echo "Frontend build completed"
+          ls -la dist || echo "dist directory not found in workspace root"
         working-directory: web
 
       - name: Build application
@@ -77,14 +81,14 @@ jobs:
           args: ${{ matrix.args }}
 
       - name: List bundle files
-        run: find src-tauri/target -name "bundle" -type d -exec find {} -type f \;
+        run: find target -name "bundle" -type d -exec find {} -type f \; || echo "No bundle files found"
 
       - name: Upload Release Assets
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            src-tauri/target/*/release/bundle/**/*
+            target/*/release/bundle/**/*/*
           generate_release_notes: true
           draft: false
           prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}

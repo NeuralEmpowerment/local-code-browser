@@ -129,8 +129,17 @@ jobs:
         working-directory: web
 
       - name: Build frontend
-        run: npm run build
+        run: |
+          echo "Building frontend..."
+          npm run build
+          echo "Frontend build completed"
+          ls -la dist || echo "dist directory not found in workspace root"
         working-directory: web
+
+      - name: Verify frontend dist exists
+        run: |
+          echo "Checking for dist directory in workspace root..."
+          ls -la ../dist || echo "dist directory not found in workspace root"
 
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
