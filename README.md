@@ -15,8 +15,15 @@ A powerful desktop application for browsing, analyzing, and managing your local 
     - [🚀 **Editor Integration**](#-editor-integration)
     - [💫 **Modern UI/UX**](#-modern-uiux)
   - [Installation](#installation)
+    - [🚀 **Option 1: Pre-built Releases (Recommended)**](#-option-1-pre-built-releases-recommended)
+    - [🛠️ **Option 2: Development Build**](#️-option-2-development-build)
     - [Prerequisites](#prerequisites)
   - [🚀 Quickstart](#-quickstart)
+    - [🔧 **Option 3: CI/CD Pipeline \& Automated Releases**](#-option-3-cicd-pipeline--automated-releases)
+      - [**Automated Release Process**](#automated-release-process)
+      - [**CI/CD Configuration**](#cicd-configuration)
+      - [**Manual Release Build**](#manual-release-build)
+      - [**Release Script**](#release-script)
   - [Usage](#usage)
     - [🖥️ **Desktop Application**](#️-desktop-application)
     - [🖱️ **CLI Interface**](#️-cli-interface)
@@ -27,6 +34,9 @@ A powerful desktop application for browsing, analyzing, and managing your local 
       - [**Configuration Commands**](#configuration-commands)
       - [**Project Detection**](#project-detection)
   - [Development](#development)
+    - [🔄 **CI/CD Workflows**](#-cicd-workflows)
+      - [**Pull Request Validation** (`.github/workflows/ci.yml`)](#pull-request-validation-githubworkflowsciyml)
+      - [**Automated Releases** (`.github/workflows/release.yml`)](#automated-releases-githubworkflowsreleaseyml)
     - [🛠️ **Available Commands**](#️-available-commands)
     - [📁 **Project Structure**](#-project-structure)
     - [🔧 **Architecture**](#-architecture)
@@ -38,6 +48,8 @@ A powerful desktop application for browsing, analyzing, and managing your local 
     - [Editor Integration Issues](#editor-integration-issues)
     - [Performance Tips](#performance-tips)
   - [Contributing](#contributing)
+    - [**Creating Releases**](#creating-releases)
+    - [**Development Workflow**](#development-workflow)
   - [License](#license)
 
 
@@ -72,6 +84,27 @@ A powerful desktop application for browsing, analyzing, and managing your local 
 
 ## Installation
 
+Choose from multiple installation methods:
+
+### 🚀 **Option 1: Pre-built Releases (Recommended)**
+
+Download the latest release from GitHub for your platform:
+
+- **[Download for macOS](https://github.com/NeuralEmpowerment/local-code-browser/releases/download/v0.1.4/Project.Browser_0.1.4_aarch64.dmg)**
+- **[Download for Windows](https://github.com/NeuralEmpowerment/local-code-browser/releases/download/v0.1.4/Project.Browser_0.1.4_x86_64.msi)**
+- **[Download for Linux](https://github.com/NeuralEmpowerment/local-code-browser/releases/download/v0.1.4/Project.Browser_0.1.4_amd64.deb)**
+
+**Installation Steps:**
+1. Download the appropriate file for your operating system
+2. **macOS**: Open the `.dmg` file and drag `Project Browser.app` to your Applications folder
+3. **Windows**: Run the `.msi` installer
+4. **Linux**: Install the `.deb` package with your package manager
+5. Launch the application from your applications menu or desktop
+
+### 🛠️ **Option 2: Development Build**
+
+Perfect for developers who want to contribute or customize the application.
+
 ### Prerequisites
 - **Rust** (latest stable)
 - **Node.js** (v16+)
@@ -97,6 +130,62 @@ make run
 ```
 
 That's it! The application will launch with all analysis features enabled.
+
+### 🔧 **Option 3: CI/CD Pipeline & Automated Releases**
+
+This project includes automated building and releases via GitHub Actions.
+
+#### **Automated Release Process**
+
+When a new version tag is pushed to the repository:
+
+```bash
+# Create and push a new version tag
+git tag v0.1.5
+git push origin v0.1.5
+```
+
+The CI/CD pipeline will automatically:
+1. **Build** the application for macOS, Windows, and Linux
+2. **Create** platform-specific installers (`.dmg`, `.msi`, `.deb`)
+3. **Sign** the applications with proper certificates
+4. **Upload** release assets to GitHub Releases
+5. **Generate** checksums for security verification
+
+#### **CI/CD Configuration**
+
+The build pipeline (`.github/workflows/release.yml`) handles:
+
+- **Multi-platform builds** using GitHub Actions runners
+- **Code signing** with platform-specific certificates
+- **Automated testing** before release
+- **Release notes** generation
+- **Asset upload** to GitHub Releases
+
+#### **Manual Release Build**
+
+To build releases locally:
+
+```bash
+# Build for current platform
+cargo tauri build --release
+
+# Build for all platforms (requires cross-compilation setup)
+cargo tauri build --release --target all
+```
+
+#### **Release Script**
+
+Use the automated release script for easy version management:
+
+```bash
+# Make executable and run
+chmod +x scripts/release.sh
+./scripts/release.sh
+
+# Follow the prompts to create a new version release
+# This will update versions, commit, tag, and trigger CI/CD
+```
 
 ## Usage
 
@@ -225,6 +314,23 @@ The scanner automatically detects projects by looking for these files:
 - **Git repositories**: `.git` directories
 
 ## Development
+
+### 🔄 **CI/CD Workflows**
+
+This project includes automated testing and release workflows:
+
+#### **Pull Request Validation** (`.github/workflows/ci.yml`)
+- **Code formatting** checks with `cargo fmt`
+- **Linting** with `cargo clippy`
+- **Testing** with `cargo test`
+- **Frontend linting** and testing
+- **Multi-platform builds** for macOS, Linux, and Windows
+
+#### **Automated Releases** (`.github/workflows/release.yml`)
+- **Triggered** on version tags (e.g., `v1.2.3`)
+- **Multi-platform builds** for distribution
+- **Automatic uploads** to GitHub Releases
+- **Release notes** generation
 
 ### 🛠️ **Available Commands**
 
@@ -379,6 +485,24 @@ If **Windsurf** or **Cursor** don't open:
 - Use **search/filter** for large project collections
 
 ## Contributing
+
+### **Creating Releases**
+
+To create a new release:
+
+1. **Update version** in all relevant files (use the release script)
+2. **Test thoroughly** with `make qa`
+3. **Create a pull request** for the version bump
+4. **After merging**, create a version tag to trigger automated release:
+
+```bash
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+The CI/CD pipeline will automatically build and publish releases to GitHub.
+
+### **Development Workflow**
 
 1. Fork the repository
 2. Create a feature branch
