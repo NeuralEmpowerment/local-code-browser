@@ -160,14 +160,6 @@ jobs:
           ls -la dist || (echo "dist directory not found in workspace root" && exit 1)
 
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          projectPath: src-tauri
-          args: ${{ matrix.args }} --bundles app
-          tagName: app-v__VERSION__
-          releaseName: "App v__VERSION__"
-          releaseBody: "See the assets to download this version and install."
-          draft: true
-          prerelease: true
+        run: |
+          cd src-tauri
+          cargo build --release ${{ matrix.args }}

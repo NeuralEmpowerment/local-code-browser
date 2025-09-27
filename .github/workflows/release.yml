@@ -98,7 +98,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            target/*/release/bundle/**/*/*
+            target/*/release/bundle/macos/*.app
+            target/*/release/bundle/dmg/*.dmg
+            target/*/release/bundle/deb/*.deb
+            target/*/release/bundle/msi/*.msi
           generate_release_notes: true
           draft: false
           prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
