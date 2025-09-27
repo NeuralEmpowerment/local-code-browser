@@ -42,6 +42,7 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
+          components: rustfmt, clippy
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Cache Rust dependencies
@@ -75,12 +76,15 @@ jobs:
           projectPath: src-tauri
           args: ${{ matrix.args }}
 
+      - name: List bundle files
+        run: find src-tauri/target -name "bundle" -type d -exec find {} -type f \;
+
       - name: Upload Release Assets
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            src-tauri/target/${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || matrix.platform == 'ubuntu-22.04' && 'x86_64-unknown-linux-gnu' || 'x86_64-pc-windows-msvc' }}/release/bundle/**/*
+            src-tauri/target/*/release/bundle/**/*
           generate_release_notes: true
           draft: false
           prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
