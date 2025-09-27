@@ -1,4 +1,7 @@
-use indexer::{scan_roots, AppConfig, Db, ScanOptions, detect::{detect_project_type, ProjectType}};
+use indexer::{
+    detect::{detect_project_type, ProjectType},
+    scan_roots, AppConfig, Db, ScanOptions,
+};
 use std::fs;
 use std::io::Write;
 
@@ -37,7 +40,11 @@ fn detects_terraform_project() {
     fs::create_dir_all(&proj).unwrap();
 
     // Create a main.tf file
-    fs::write(proj.join("main.tf"), "resource \"aws_instance\" \"example\" {}").unwrap();
+    fs::write(
+        proj.join("main.tf"),
+        "resource \"aws_instance\" \"example\" {}",
+    )
+    .unwrap();
 
     let project_type = detect_project_type(&proj);
     assert_eq!(project_type, Some(ProjectType::Terraform));
@@ -51,7 +58,11 @@ fn detects_ansible_project() {
 
     // Create an ansible directory with a playbook
     fs::create_dir_all(proj.join("ansible")).unwrap();
-    fs::write(proj.join("ansible").join("playbook.yml"), "- hosts: all\n  tasks:\n    - debug: msg=hello").unwrap();
+    fs::write(
+        proj.join("ansible").join("playbook.yml"),
+        "- hosts: all\n  tasks:\n    - debug: msg=hello",
+    )
+    .unwrap();
 
     let project_type = detect_project_type(&proj);
     assert_eq!(project_type, Some(ProjectType::Ansible));

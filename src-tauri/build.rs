@@ -1,5 +1,5 @@
-use std::{env, fs, path::PathBuf};
 use base64::{engine::general_purpose, Engine as _};
+use std::{env, fs, path::PathBuf};
 
 fn main() {
     // Ensure a valid RGBA icon exists so tauri::generate_context!() doesn't panic

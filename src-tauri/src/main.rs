@@ -22,37 +22,39 @@ fn test_command() -> Result<String, String> {
 
 #[tauri::command]
 fn open_in_editor(editor: String, path: String) -> Result<String, String> {
-    tracing::info!("open_in_editor called with editor={}, path={}", editor, path);
-    
+    tracing::info!(
+        "open_in_editor called with editor={}, path={}",
+        editor,
+        path
+    );
+
     use std::process::Command;
-    
+
     // Try common paths for editors
     let editor_paths = match editor.as_str() {
         "windsurf" => vec![
-            "windsurf", 
-            "/usr/local/bin/windsurf", 
+            "windsurf",
+            "/usr/local/bin/windsurf",
             "/opt/homebrew/bin/windsurf",
             "/Applications/Windsurf.app/Contents/Resources/app/bin/windsurf",
-            "/Applications/Windsurf.app/Contents/MacOS/Windsurf"
+            "/Applications/Windsurf.app/Contents/MacOS/Windsurf",
         ],
         "cursor" => vec![
-            "cursor", 
-            "/usr/local/bin/cursor", 
-            "/opt/homebrew/bin/cursor", 
-            "/Applications/Cursor.app/Contents/Resources/app/bin/cursor"
+            "cursor",
+            "/usr/local/bin/cursor",
+            "/opt/homebrew/bin/cursor",
+            "/Applications/Cursor.app/Contents/Resources/app/bin/cursor",
         ],
         _ => vec![editor.as_str()],
     };
-    
+
     for editor_path in editor_paths {
-        let result = Command::new(editor_path)
-            .arg(&path)
-            .spawn();
-        
+        let result = Command::new(editor_path).arg(&path).spawn();
+
         match result {
             Ok(_) => {
                 tracing::info!("Successfully launched {} with path {}", editor_path, path);
-                return Ok(format!("Opened {} in {}", path, editor));
+                return Ok(format!("Opened {path} in {editor}"));
             }
             Err(e) => {
                 tracing::debug!("Failed to launch {} with path {}: {}", editor_path, path, e);
@@ -60,9 +62,11 @@ fn open_in_editor(editor: String, path: String) -> Result<String, String> {
             }
         }
     }
-    
+
     tracing::error!("Failed to launch {} with any known path", editor);
-    Err(format!("Failed to open {}: command not found in common locations", editor))
+    Err(format!(
+        "Failed to open {editor}: command not found in common locations"
+    ))
 }
 
 #[tauri::command]
@@ -97,7 +101,13 @@ fn projects_query(
     page: u32,
     page_size: u32,
 ) -> Result<ProjectsPage, String> {
-    tracing::info!("projects_query called with q={:?}, sort={:?}, page={}, page_size={}", q, sort, page, page_size);
+    tracing::info!(
+        "projects_query called with q={:?}, sort={:?}, page={}, page_size={}",
+        q,
+        sort,
+        page,
+        page_size
+    );
     let db = Db::open_default().map_err(|e| {
         tracing::error!("Failed to open database: {}", e);
         e.to_string()
@@ -109,24 +119,34 @@ fn projects_query(
         Some("loc") => SortKey::Loc,
         _ => SortKey::Recent,
     };
-    let qnorm = q.as_ref().and_then(|s| if s.trim().is_empty() { None } else { Some(s.as_str()) });
+    let qnorm = q.as_ref().and_then(|s| {
+        if s.trim().is_empty() {
+            None
+        } else {
+            Some(s.as_str())
+        }
+    });
     let ascending = sort_direction.as_deref() == Some("asc");
     tracing::info!(q = ?qnorm, sort = ?sort_key as i32, ascending, page, page_size, db = %db.path.display(), "projects_query");
-    
-    let total_count = db
-        .count_projects(qnorm)
-        .map_err(|e| {
-            tracing::error!("Database count failed: {}", e);
-            e.to_string()
-        })?;
-    
+
+    let total_count = db.count_projects(qnorm).map_err(|e| {
+        tracing::error!("Database count failed: {}", e);
+        e.to_string()
+    })?;
+
     let rows = db
         .query_projects(qnorm, sort_key, ascending, page, page_size)
         .map_err(|e| {
             tracing::error!("Database query failed: {}", e);
             e.to_string()
         })?;
-    tracing::info!(rows = rows.len(), total_count, "projects_query_result - returning {} items of {} total", rows.len(), total_count);
+    tracing::info!(
+        rows = rows.len(),
+        total_count,
+        "projects_query_result - returning {} items of {} total",
+        rows.len(),
+        total_count
+    );
     Ok(ProjectsPage {
         items: rows,
         page,
@@ -141,7 +161,12 @@ fn main() {
         .init();
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![test_command, open_in_editor, scan_start, projects_query])
+        .invoke_handler(tauri::generate_handler![
+            test_command,
+            open_in_editor,
+            scan_start,
+            projects_query
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

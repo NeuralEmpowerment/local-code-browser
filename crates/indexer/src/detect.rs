@@ -39,7 +39,10 @@ pub fn detect_project_type(dir: &Path) -> Option<ProjectType> {
         (ProjectType::Go, &["go.mod"][..]),
         (ProjectType::Java, &["pom.xml", "build.gradle", "gradlew"]),
         (ProjectType::DotNet, &["global.json"][..]),
-        (ProjectType::Terraform, &["main.tf", "variables.tf", "outputs.tf"][..]),
+        (
+            ProjectType::Terraform,
+            &["main.tf", "variables.tf", "outputs.tf"][..],
+        ),
         (ProjectType::Ansible, &[]), // Special case - handled below
     ];
 

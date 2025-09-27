@@ -241,18 +241,19 @@ impl Db {
     pub fn count_projects(&self, search: Option<&str>) -> Result<u32> {
         let mut sql = String::from("SELECT COUNT(*) FROM projects p");
         let mut params_vec: Vec<String> = Vec::new();
-        
+
         if let Some(q) = search {
             sql.push_str(" WHERE p.name LIKE ?1 OR p.path LIKE ?1");
             params_vec.push(format!("%{q}%"));
         }
-        
+
         let count: i64 = if params_vec.is_empty() {
             self.conn.query_row(&sql, [], |row| row.get(0))?
         } else {
-            self.conn.query_row(&sql, [&params_vec[0]], |row| row.get(0))?
+            self.conn
+                .query_row(&sql, [&params_vec[0]], |row| row.get(0))?
         };
-        
+
         Ok(count as u32)
     }
 
@@ -267,12 +268,16 @@ impl Db {
         let direction = if ascending { "ASC" } else { "DESC" };
         let order = match sort {
             SortKey::Recent => {
-                format!("CASE WHEN m.last_edited_at IS NULL THEN 1 ELSE 0 END, m.last_edited_at {}", direction)
+                format!(
+                    "CASE WHEN m.last_edited_at IS NULL THEN 1 ELSE 0 END, m.last_edited_at {direction}"
+                )
             }
-            SortKey::Size => format!("CASE WHEN m.size_bytes IS NULL THEN 1 ELSE 0 END, m.size_bytes {}", direction),
-            SortKey::Name => format!("p.name {}", direction),
-            SortKey::Type => format!("p.type {}, p.name {}", direction, direction),
-            SortKey::Loc => format!("CASE WHEN m.loc IS NULL THEN 1 ELSE 0 END, m.loc {}", direction),
+            SortKey::Size => format!(
+                "CASE WHEN m.size_bytes IS NULL THEN 1 ELSE 0 END, m.size_bytes {direction}"
+            ),
+            SortKey::Name => format!("p.name {direction}"),
+            SortKey::Type => format!("p.type {direction}, p.name {direction}"),
+            SortKey::Loc => format!("CASE WHEN m.loc IS NULL THEN 1 ELSE 0 END, m.loc {direction}"),
         };
         let mut sql = String::from(
             "SELECT p.id, p.name, p.path, p.type, p.is_git_repo,\n                   m.size_bytes, m.files_count, m.last_edited_at, m.loc\n             FROM projects p LEFT JOIN metrics m ON m.project_id = p.id",
