@@ -64,13 +64,21 @@ jobs:
         run: npm ci
         working-directory: web
 
+      - name: Clean previous build
+        run: rm -rf dist
+
       - name: Build frontend
         run: |
           echo "Building frontend..."
           npm run build
           echo "Frontend build completed"
-          ls -la dist || echo "dist directory not found in workspace root"
+          ls -la dist || (echo "dist directory not found in workspace root" && exit 1)
         working-directory: web
+
+      - name: Verify frontend dist exists
+        run: |
+          echo "Checking for dist directory in workspace root..."
+          ls -la dist || (echo "dist directory not found in workspace root" && exit 1)
 
       - name: Build application
         uses: tauri-apps/tauri-action@v0
